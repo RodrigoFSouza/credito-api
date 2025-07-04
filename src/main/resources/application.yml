@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Credito Api
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/credito
+    password: postgres
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+    hibernate:
+      ddl-auto: none
+
+  flyway:
+    baselineOnMigrate: true
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "metrics,health,info,beans,auditevents"
