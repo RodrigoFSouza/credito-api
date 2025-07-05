@@ -22,7 +22,13 @@ spring:
       ddl-auto: none
 
   flyway:
+    enabled: true
     baselineOnMigrate: true
+    baselineVersion: 0
+    locations: classpath:db/migration
+    validateOnMigrate: true
+    outOfOrder: false
+    cleanDisabled: true
 
 management:
   endpoints:
