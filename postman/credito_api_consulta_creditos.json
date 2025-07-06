@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "a4391d83-4d5b-4bec-93a6-491b22c639ca",
+		"name": "Credito API - Consulta de Créditos Constituídos",
+		"description": "Collection para testar a API RESTful de consulta de créditos constituídos baseados em NFS-e",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2818721",
+		"_collection_link": "https://planetary-meteor-750399.postman.co/workspace/credito~acfa0b0d-d717-4c6f-bc9a-6d568770d53d/collection/2818721-a4391d83-4d5b-4bec-93a6-491b22c639ca?action=share&source=collection_link&creator=2818721"
+	},
+	"item": [
+		{
+			"name": "Buscar Créditos por NFS-e",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Response contains credit data\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.length > 0) {",
+							"        pm.expect(jsonData[0]).to.have.property('numeroCredito');",
+							"        pm.expect(jsonData[0]).to.have.property('numeroNfse');",
+							"        pm.expect(jsonData[0]).to.have.property('valorIssqn');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/creditos/{{numeroNfse}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"creditos",
+						"{{numeroNfse}}"
+					]
+				},
+				"description": "Retorna uma lista de créditos constituídos com base no número da NFS-e"
+			},
+			"response": [
+				{
+					"name": "Sucesso - Créditos encontrados",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/creditos/7891011",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								"7891011"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n  {\n    \"numeroCredito\": \"789012\",\n    \"numeroNfse\": \"7891011\",\n    \"dataConstituicao\": \"2024-02-26\",\n    \"valorIssqn\": 1200.50,\n    \"tipoCredito\": \"ISSQN\",\n    \"simplesNacional\": \"Não\",\n    \"aliquota\": 4.5,\n    \"valorFaturado\": 25000.00,\n    \"valorDeducao\": 4000.00,\n    \"baseCalculo\": 21000.00\n  },\n  {\n    \"numeroCredito\": \"123456\",\n    \"numeroNfse\": \"7891011\",\n    \"dataConstituicao\": \"2024-02-25\",\n    \"valorIssqn\": 1500.75,\n    \"tipoCredito\": \"ISSQN\",\n    \"simplesNacional\": \"Sim\",\n    \"aliquota\": 5.0,\n    \"valorFaturado\": 30000.00,\n    \"valorDeducao\": 5000.00,\n    \"baseCalculo\": 25000.00\n  }\n]"
+				}
+			]
+		},
+		{
+			"name": "Buscar Crédito por Número",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an object\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object');",
+							"});",
+							"",
+							"pm.test(\"Response contains all required fields\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('numeroCredito');",
+							"    pm.expect(jsonData).to.have.property('numeroNfse');",
+							"    pm.expect(jsonData).to.have.property('dataConstituicao');",
+							"    pm.expect(jsonData).to.have.property('valorIssqn');",
+							"    pm.expect(jsonData).to.have.property('tipoCredito');",
+							"    pm.expect(jsonData).to.have.property('simplesNacional');",
+							"    pm.expect(jsonData).to.have.property('aliquota');",
+							"    pm.expect(jsonData).to.have.property('valorFaturado');",
+							"    pm.expect(jsonData).to.have.property('valorDeducao');",
+							"    pm.expect(jsonData).to.have.property('baseCalculo');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/creditos/credito/{{numeroCredito}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"creditos",
+						"credito",
+						"{{numeroCredito}}"
+					]
+				},
+				"description": "Retorna os detalhes de um crédito constituído específico com base no número do crédito"
+			},
+			"response": [
+				{
+					"name": "Sucesso - Crédito encontrado",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/creditos/credito/123456",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								"credito",
+								"123456"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"numeroCredito\": \"123456\",\n  \"numeroNfse\": \"7891011\",\n  \"dataConstituicao\": \"2024-02-25\",\n  \"valorIssqn\": 1500.75,\n  \"tipoCredito\": \"ISSQN\",\n  \"simplesNacional\": \"Sim\",\n  \"aliquota\": 5.0,\n  \"valorFaturado\": 30000.00,\n  \"valorDeducao\": 5000.00,\n  \"baseCalculo\": 25000.00\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "numeroNfse",
+			"value": "7891011",
+			"type": "string"
+		},
+		{
+			"key": "numeroCredito",
+			"value": "123456",
+			"type": "string"
+		}
+	]
+}

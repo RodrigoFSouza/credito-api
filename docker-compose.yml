@@ -1,1 +1,56 @@
-version: '3.5'
+version: '3.8'
+
+services:
+  # PostgreSQL
+  postgres:
+    image: postgres:13-alpine
+    container_name: credito-postgres
+    environment:
+      POSTGRES_DB: credito
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - credito-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d credito"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: credito-api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/credito
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - credito-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+
+networks:
+  credito-network:
+    driver: bridge
