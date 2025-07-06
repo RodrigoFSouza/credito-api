@@ -13,6 +13,7 @@ public class CreditoMapper {
         }
         
         return new CreditoDTO(
+            credito.getId(),
             credito.getNumeroCredito(),
             credito.getNumeroNfse(),
             credito.getDataConstituicao(),

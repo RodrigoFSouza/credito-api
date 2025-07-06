@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreditoDTO {
 
+    private Long id;
     private String numeroCredito;
     private String numeroNfse;
 
