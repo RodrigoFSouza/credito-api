@@ -1,0 +1,102 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+        <h2 class="mb-4">Consulta de Créditos Constituídos</h2>
+        
+        <!-- Formulário de Busca -->
+        <div class="card mb-4">
+            <div class="card-body">
+            <form (ngSubmit)="buscarCreditos()" #form="ngForm">
+                <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                    <label for="numeroNfse" class="form-label">Número da NFS-e</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="numeroNfse" 
+                        [(ngModel)]="numeroNfse" 
+                        name="numeroNfse"
+                        placeholder="Digite o número da NFS-e"
+                        required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                    <label class="form-label">&nbsp;</label>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary d-block w-100"
+                        [disabled]="loading || form.invalid">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                        {{ loading ? 'Buscando...' : 'Buscar Créditos' }}
+                    </button>
+                    </div>
+                </div>
+                </div>
+            </form>
+            </div>
+        </div>
+
+        <!-- Mensagem de Erro -->
+        <div *ngIf="error" class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loading" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+
+        <!-- Lista de Créditos -->
+        <div *ngIf="creditos.length > 0" class="row">
+            <div class="col-md-12">
+            <h4 class="mb-3">Créditos Encontrados ({{ creditos.length }})</h4>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                    <th>Número do Crédito</th>
+                    <th>NFS-e</th>
+                    <th>Data Constituição</th>
+                    <th>Valor ISSQN</th>
+                    <th>Tipo</th>
+                    <th>Simples Nacional</th>
+                    <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let credito of creditos">
+                    <td>{{ credito.numeroCredito }}</td>
+                    <td>{{ credito.numeroNfse }}</td>
+                    <td>{{ formatarData(credito.dataConstituicao) }}</td>
+                    <td>{{ formatarMoeda(credito.valorIssqn) }}</td>
+                    <td>
+                        <span class="badge bg-primary">{{ credito.tipoCredito }}</span>
+                    </td>
+                    <td>
+                        <span class="badge" 
+                            [class.bg-success]="credito.simplesNacional === 'Sim'"
+                            [class.bg-secondary]="credito.simplesNacional === 'Não'">
+                        {{ credito.simplesNacional }}
+                        </span>
+                    </td>
+                    <td>
+                        <button 
+                        class="btn btn-sm btn-outline-primary"
+                        (click)="verDetalhes(credito.numeroCredito)">
+                        Ver Detalhes
+                        </button>
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

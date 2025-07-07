@@ -1,0 +1,112 @@
+.creditos-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+}
+
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 16px;
+    color: #666;
+}
+
+.no-results mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+}
+
+.credito-item {
+    transition: box-shadow 0.3s ease;
+}
+
+.credito-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.credito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.credito-info h3 {
+    margin: 0 0 4px 0;
+    color: #333;
+}
+
+.nfse {
+    margin: 0 0 4px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.date {
+    margin: 0;
+    color: #999;
+    font-size: 12px;
+}
+
+.credito-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.tipo {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.credito-values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.value-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.label {
+    font-weight: 500;
+    color: #666;
+    font-size: 14px;
+}
+
+.value {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .credito-header {
+    flex-direction: column;
+    gap: 12px;
+    }
+    
+    .credito-status {
+    align-items: flex-start;
+    }
+    
+    .credito-values {
+    grid-template-columns: 1fr;
+    }
+    
+    .value-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    }
+}
