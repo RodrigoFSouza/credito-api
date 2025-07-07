@@ -1,0 +1,15 @@
+<div *ngIf="show && message" [class]="alertClasses" role="alert">
+    <div class="d-flex align-items-center">
+        <i [class]="alertIcon" class="me-2"></i>
+        <div class="flex-grow-1">
+        {{ message }}
+        </div>
+        <button 
+        *ngIf="dismissible" 
+        type="button" 
+        class="btn-close" 
+        aria-label="Fechar"
+        (click)="close()">
+        </button>
+    </div>
+</div>

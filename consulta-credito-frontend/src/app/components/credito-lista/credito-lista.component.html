@@ -39,9 +39,13 @@
         </div>
 
         <!-- Mensagem de Erro -->
-        <div *ngIf="error" class="alert alert-danger" role="alert">
-            {{ error }}
-        </div>
+        <app-mensagem-api 
+            [show]="showAlert"
+            [type]="alertType"
+            [message]="alertMessage"
+            [dismissible]="true"
+            (dismissed)="onAlertDismissed()">
+        </app-mensagem-api>
 
         <!-- Loading -->
         <div *ngIf="loading" class="text-center">
@@ -72,8 +76,8 @@
                     <tr *ngFor="let credito of creditos">
                     <td>{{ credito.numeroCredito }}</td>
                     <td>{{ credito.numeroNfse }}</td>
-                    <td>{{ formatarData(credito.dataConstituicao) }}</td>
-                    <td>{{ formatarMoeda(credito.valorIssqn) }}</td>
+                    <td>{{ credito.dataConstituicao | date:'shortDate':'':'pt-BR' }}</td>                    
+                    <td>{{ credito.valorIssqn | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>                    
                     <td>
                         <span class="badge bg-primary">{{ credito.tipoCredito }}</span>
                     </td>

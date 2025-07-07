@@ -3,18 +3,26 @@ import { CommonModule } from '@angular/common';
 import { Credito } from '../../models/credito.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreditoService } from '../../services/credito.service';
+import { AlertType, MensagemApiComponent } from '../mensagem-api.component';
+import { ApiErrorResponse } from '../../models/api-error.model';
 
 @Component({
   selector: 'app-credito-detalhes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MensagemApiComponent],
   templateUrl: './credito-detalhes.component.html',
   styleUrls: ['./credito-detalhes.component.css']
 })
 export class CreditoDetalhesComponent {
   credito: Credito | null = null;
   loading: boolean = false;
-  error: string = '';
+  errorMessage: string = '';
+  errorStatus: number | null = null;
+
+  // Propriedades para o component de alerta
+  showAlert: boolean = false;
+  alertMessage: string = '';
+  alertType: AlertType = 'info';
 
   constructor(
     private route: ActivatedRoute,
@@ -23,53 +31,71 @@ export class CreditoDetalhesComponent {
   ) { }
 
   ngOnInit(): void {
-    this.carregarCredito();
+    this.carregarCredito(); 
   }
-
 
   carregarCredito(): void {
     const numeroCredito = this.route.snapshot.paramMap.get('numeroCredito');
     
     if (!numeroCredito) {
-      this.error = 'Número do crédito não encontrado';
+      this.errorMessage = 'Número do crédito não encontrado';
+      this.errorStatus = 400;
       return;
     }
 
     this.loading = true;
-    this.error = '';
+    this.errorMessage = '';
+    this.errorStatus = null;
 
     this.creditoService.getCreditoById(numeroCredito).subscribe({
       next: (credito) => {
         this.credito = credito;
         this.loading = false;
       },
-      error: (error) => {
-        this.error = error;
-        this.loading = false;
+      error: (apiError: ApiErrorResponse) => {
+        this.handleApiError(apiError);
       }
     });
   }
 
+  private handleApiError(apiError: ApiErrorResponse): void {
+    if (apiError.isClientError) {
+      this.showWarningAlert(apiError.message);
+    } else if (apiError.isServerError) {
+      this.showErrorAlert(apiError.message);
+    } else {
+      this.showErrorAlert(apiError.message);
+    }
+  }
+
+  private showWarningAlert(message: string): void {
+    this.alertMessage = message;
+    this.alertType = 'warning';
+    this.showAlert = true;
+  }
+
+  private showSuccessAlert(message: string): void {
+    this.alertMessage = message;
+    this.alertType = 'success';
+    this.showAlert = true;
+  }
+
+  private showErrorAlert(message: string): void {
+    this.alertMessage = message;
+    this.alertType = 'danger';
+    this.showAlert = true;
+  }
+
+  hideAlert(): void {
+    this.showAlert = false;
+    this.alertMessage = '';
+  }
+
+  onAlertDismissed(): void {
+    this.hideAlert();
+  }
 
   voltarLista(): void {
     this.router.navigate(['/creditos']);
-  }
-
-
-  formatarMoeda(valor: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(valor);
-  }
-
-  
-  formatarData(data: string): string {
-    return new Date(data).toLocaleDateString('pt-BR');
-  }
-
-  
-  formatarPercentual(valor: number): string {
-    return valor.toFixed(2) + '%';
   }
 } 

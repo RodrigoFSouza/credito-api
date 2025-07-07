@@ -4,6 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Credito, CreditoResponse } from '../models/credito.model';
 import { environment } from '../../environments/environment';
+import { ApiError } from '../models/api-error.model';
+import { ApiErrorResponse } from '../models/api-error.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +29,30 @@ export class CreditoService {
       );
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Ocorreu um erro desconhecido';
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let apiErrorResponse: ApiErrorResponse;
     
     if (error.error instanceof ErrorEvent) {
-      errorMessage = `Erro: ${error.error.message}`;
+      apiErrorResponse = {
+        message: `Erro de conexão: ${error.error.message}`,
+        statusCode: 0,
+        isClientError: false,
+        isServerError: false
+      };
     } else {
-      errorMessage = `Código: ${error.status}, Mensagem: ${error.message}`;
+      const apiError: ApiError = error.error;
+      
+      apiErrorResponse = {
+        message: apiError?.message || error.message || 'Erro desconhecido',
+        statusCode: error.status,
+        isClientError: error.status >= 400 && error.status < 500,
+        isServerError: error.status >= 500
+      };
     }
     
-    console.error(errorMessage);
-    return throwError(errorMessage);
+    console.log('Erro na API:' +  apiErrorResponse);
+    return throwError(() => apiErrorResponse);
   }
+
+
 } 

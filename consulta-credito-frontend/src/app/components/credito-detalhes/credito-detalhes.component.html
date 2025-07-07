@@ -10,9 +10,13 @@
         </div>
   
         <!-- Mensagem de Erro -->
-        <div *ngIf="error" class="alert alert-danger" role="alert">
-          {{ error }}
-        </div>
+        <app-mensagem-api 
+            [show]="showAlert"
+            [type]="alertType"
+            [message]="alertMessage"
+            [dismissible]="true"
+            (dismissed)="onAlertDismissed()">
+        </app-mensagem-api>
   
         <!-- Loading -->
         <div *ngIf="loading" class="text-center">
@@ -44,7 +48,7 @@
   
                 <div class="mb-3">
                   <label class="form-label fw-bold">Data de Constituição:</label>
-                  <p class="form-control-plaintext">{{ formatarData(credito.dataConstituicao) }}</p>
+                  <p class="form-control-plaintext">{{ credito.dataConstituicao | date:'shortDate':'':'pt-BR' }}</p>
                 </div>
   
                 <div class="mb-3">
@@ -72,31 +76,31 @@
                 
                 <div class="mb-3">
                   <label class="form-label fw-bold">Valor ISSQN:</label>
-                  <p class="form-control-plaintext text-success fw-bold fs-5">
-                    {{ formatarMoeda(credito.valorIssqn) }}
+                  <p class="form-control-plaintext text-success fw-bold fs-5">                    
+                    {{credito.valorIssqn | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
                   </p>
                 </div>
   
                 <div class="mb-3">
                   <label class="form-label fw-bold">Valor Faturado:</label>
-                  <p class="form-control-plaintext">{{ formatarMoeda(credito.valorFaturado) }}</p>
+                  <p class="form-control-plaintext">{{credito.valorFaturado | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
                 </div>
   
                 <div class="mb-3">
                   <label class="form-label fw-bold">Valor Dedução:</label>
-                  <p class="form-control-plaintext text-warning">
-                    {{ formatarMoeda(credito.valorDeducao) }}
+                  <p class="form-control-plaintext text-warning">                    
+                    {{credito.valorDeducao | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
                   </p>
                 </div>
   
                 <div class="mb-3">
                   <label class="form-label fw-bold">Base de Cálculo:</label>
-                  <p class="form-control-plaintext">{{ formatarMoeda(credito.baseCalculo) }}</p>
+                  <p class="form-control-plaintext">{{ credito.baseCalculo | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
                 </div>
   
                 <div class="mb-3">
                   <label class="form-label fw-bold">Alíquota:</label>
-                  <p class="form-control-plaintext">{{ formatarPercentual(credito.aliquota) }}</p>
+                  <p class="form-control-plaintext">{{ credito.aliquota | percent:'1.2-2':'pt-BR' }}</p>
                 </div>
               </div>
             </div>
@@ -113,24 +117,24 @@
                       <div class="col-md-3">
                         <div class="border-end">
                           <h6 class="text-muted">Valor Faturado</h6>
-                          <h5 class="text-primary">{{ formatarMoeda(credito.valorFaturado) }}</h5>
+                          <h5 class="text-primary">{{ credito.valorFaturado | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h5>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="border-end">
                           <h6 class="text-muted">Dedução</h6>
-                          <h5 class="text-warning">{{ formatarMoeda(credito.valorDeducao) }}</h5>
+                          <h5 class="text-warning">{{ credito.valorDeducao | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h5>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="border-end">
                           <h6 class="text-muted">Base de Cálculo</h6>
-                          <h5 class="text-info">{{ formatarMoeda(credito.baseCalculo) }}</h5>
+                          <h5 class="text-info">{{ credito.baseCalculo | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h5>
                         </div>
                       </div>
                       <div class="col-md-3">
-                        <h6 class="text-muted">ISSQN ({{ formatarPercentual(credito.aliquota) }})</h6>
-                        <h5 class="text-success">{{ formatarMoeda(credito.valorIssqn) }}</h5>
+                        <h6 class="text-muted">ISSQN ({{ credito.aliquota | percent:'1.2-2':'pt-BR' }})</h6>
+                        <h5 class="text-success">{{ credito.valorIssqn | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h5>
                       </div>
                     </div>
                   </div>
