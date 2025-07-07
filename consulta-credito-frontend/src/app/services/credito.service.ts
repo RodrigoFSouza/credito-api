@@ -3,12 +3,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Credito, CreditoResponse } from '../models/credito.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CreditoService {
-  private baseUrl = 'http://localhost:8080/api'; // Altere para sua URL da API
+  private baseUrl = environment.apiBaseUrl; 
 
   constructor(private http: HttpClient) { }
 
