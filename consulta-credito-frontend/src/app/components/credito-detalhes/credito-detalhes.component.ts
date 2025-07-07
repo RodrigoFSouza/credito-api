@@ -60,29 +60,17 @@ export class CreditoDetalhesComponent {
 
   private handleApiError(apiError: ApiErrorResponse): void {
     if (apiError.isClientError) {
-      this.showWarningAlert(apiError.message);
-    } else if (apiError.isServerError) {
-      this.showErrorAlert(apiError.message);
+      this.showAlertMessage('warning', apiError.message);
+    } else if (apiError.isServerError) {      
+      this.showAlertMessage('danger', apiError.message);
     } else {
-      this.showErrorAlert(apiError.message);
+      this.showAlertMessage('danger', apiError.message);
     }
   }
 
-  private showWarningAlert(message: string): void {
+  private showAlertMessage(type: AlertType, message: string): void {
+    this.alertType = type;
     this.alertMessage = message;
-    this.alertType = 'warning';
-    this.showAlert = true;
-  }
-
-  private showSuccessAlert(message: string): void {
-    this.alertMessage = message;
-    this.alertType = 'success';
-    this.showAlert = true;
-  }
-
-  private showErrorAlert(message: string): void {
-    this.alertMessage = message;
-    this.alertType = 'danger';
     this.showAlert = true;
   }
 
