@@ -15,7 +15,8 @@ import { CreditoListaComponent } from './components/credito-lista/credito-lista.
     FormsModule,
     CreditoDetalhesComponent,
     CreditoListaComponent
-  ]
+  ],
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
 

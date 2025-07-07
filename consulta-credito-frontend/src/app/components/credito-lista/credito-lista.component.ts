@@ -1,18 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { Credito } from '../../models/credito.model';
 import { Router } from '@angular/router';
 import { CreditoService } from '../../services/credito.service';
-
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-credito-lista',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatChipsModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './credito-lista.component.html',  
   styleUrls: ['./credito-lista.component.css']
 })
