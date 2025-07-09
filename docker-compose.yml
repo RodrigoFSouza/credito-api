@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL
   postgres:
     image: postgres:13-alpine
     container_name: credito-postgres
@@ -21,8 +20,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
-  # Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: credito-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - credito-network
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: credito-kafka
@@ -42,7 +56,8 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     networks:
       - credito-network
     healthcheck:
@@ -50,28 +65,13 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
 
-  # Zookeeper (necessário para o Kafka)
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.0
-    container_name: credito-zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - credito-network
-    healthcheck:
-      test: ["CMD-SHELL", "echo ruok | nc localhost 2181"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # API
-  app:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: credito-api
+    container_name: credito-backend
     ports:
       - "8080:8080"
     environment:
@@ -94,10 +94,39 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    tmpfs:
+      - /tmp
+      - /var/tmp
+    security_opt:
+      - no-new-privileges:true
+    user: "1000:1000"
+
+  frontend:
+    build:
+      context: ./consulta-credito-frontend
+      dockerfile: Dockerfile
+    container_name: credito-frontend
+    ports:
+      - "80:80"
+    networks:
+      - credito-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
+    driver: local
 
 networks:
   credito-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
